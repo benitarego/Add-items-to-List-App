@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
+
 class JobModel {
 //  String jcompanyname;
-  String jtitle;
-  String jlocation;
+  final String jtitle;
+  final String jlocation;
 //  String jcompanylogo;
 //  String jsalary;
 //  String jdesc;
@@ -10,8 +12,10 @@ class JobModel {
 
   JobModel(
 //      this.jcompanyname,
-      this.jtitle,
-      this.jlocation,
+      {
+    @required this.jtitle,
+    @required this.jlocation,
+  }
 //      this.jcompanylogo,
 //      this.jsalary,
 //      this.jdesc,

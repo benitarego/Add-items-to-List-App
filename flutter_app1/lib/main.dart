@@ -21,14 +21,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List <JobModel> item = <JobModel>[];
-//  String temp;
+  final List<JobModel> _jobModels = [
+    JobModel(jtitle: 'Flutter Developer', jlocation: 'Mumbai'),
+    JobModel(jtitle: 'ML Engineer', jlocation: 'Mumbai'),
+  ];
 
-  JobModel _jobModel;
+  //making controller's to store what i input in text fields
+  final _jobTitleController = TextEditingController();
+  final _jobLocationController = TextEditingController();
+  //see the input text fields below
+  //function to pass controller data to addNewJobModel()
+  void _submitData() {
+    if (_jobTitleController.text.isEmpty) {
+      return;
+    }
+    if (_jobLocationController.text.isEmpty) {
+      return;
+    }
+    final _enteredTitle = _jobTitleController.text;
+    final _enteredLocation = _jobLocationController.text;
+    _addNewJobModel(_enteredTitle, _enteredLocation);
 
-  @override
-  void initState() {
-    super.initState();
+    //after adding here is a good place to clear your controller.text
+
+    Navigator.of(context).pop();
+  }
+
+  //the method that add's stuff to the list above
+  void _addNewJobModel(String jobtitle, String joblocation) {
+    final newJobModel = JobModel(jtitle: jobtitle, jlocation: joblocation);
+
+    setState(() {
+      _jobModels.add(newJobModel);
+    });
   }
 
   @override
@@ -39,15 +64,19 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          title: Text('Add data to List', style: TextStyle(color: Colors.black),),
+          title: Text(
+            'Add data to List',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         backgroundColor: Colors.white,
         body: ListView.builder(
           shrinkWrap: true,
-          itemCount: item.length,
+          itemCount: _jobModels.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              title: Text(item[index].jtitle),
+              title: Text(_jobModels[index].jtitle),
+              subtitle: Text(_jobModels[index].jlocation),
 //              subtitle: Text(item[index].jlocation),
             );
           },
@@ -63,9 +92,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       content: Column(
                         children: <Widget>[
                           TextField(
-                            onChanged: (String value) {
-                              _jobModel.jtitle = value;
-                            },
+                            decoration: InputDecoration(labelText: 'Job Title'),
+                            controller: _jobTitleController,
+                            onSubmitted: (_) => _submitData(),
+                          ),
+                          TextField(
+                            decoration:
+                                InputDecoration(labelText: 'Job Location'),
+                            controller: _jobLocationController,
+                            onSubmitted: (_) => _submitData(),
                           ),
 //                          TextField(
 //                            onChanged: (String value1) {
@@ -76,20 +111,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       actions: <Widget>[
                         FlatButton(
-                          onPressed: () {
-                            setState(() {
-                              item.add(_jobModel);
-                            });
-                            Navigator.pop(context);
-                          },
+                          onPressed: _submitData,
                           child: Text('Add'),
                         )
                       ],
                     );
-                  }
-              );
-            }
-        ),
+                  });
+            }),
       ),
     );
   }
